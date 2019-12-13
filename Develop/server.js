@@ -22,15 +22,43 @@ app.get("/notes", function(req, res) {
     res.sendFile(path.join(__dirname, "./public/notes.html"));
 });
 
-// app.get("/api/notes", function(req, res) {
-//     var noteData = res.sendFile(path.join(__dirname, '../db/',
-//         "db.json"));
-//     res.json(noteData);
-// });
+app.get("/api/notes", function(req, res) {
+    fs.readFile('./db/db.json', 'utf8', (err, data) => {
+        if (err) throw err;
+        console.log(data);
+        res.json(JSON.parse(data));
+    });
+});
 
-// app.post("/api/notes", function(req, res) {
+app.post("/api/notes", function(req, res) {
+    fs.readFile('./db/db.json', 'utf8', (err, data) => {
+        if (err) throw err;
+        let temp = JSON.parse(data);
+        console.log(temp)
+        temp.push(req.body)
+        fs.writeFile('./db/db.json', JSON.stringify(temp), (err) => {
+            if (err) throw err;
+            res.json('The file has been saved!')
+        })
+    })
+});
 
-// });
+app.delete("/api/notes/:id", function(req, res) {
+    fs.readFile('./db/db.json', 'utf8', (err, data) => {
+        if (err) throw err;
+        let temp = JSON.parse(data);
+        temp.splice(req.params.id, 1)
+        fs.writeFile('./db/db.json', JSON.stringify(temp), (err) => {
+            if (err) throw err;
+            res.json('The note has been removed!')
+        })
+    })
+});
+
+app.post("/api/clear", function(req, res) {
+    db.length = 0;
+})
+
 
 // LISTENER
 app.listen(PORT, function() {
