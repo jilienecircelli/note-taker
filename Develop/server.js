@@ -59,7 +59,6 @@ app.post("/api/clear", function(req, res) {
     db.length = 0;
 })
 
-
 // LISTENER
 app.listen(PORT, function() {
     console.log("App listening on PORT: " + PORT);
